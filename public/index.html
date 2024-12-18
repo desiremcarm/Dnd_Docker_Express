@@ -17,14 +17,64 @@
     <title>API</title>
   </head>
   <body>
-    <div class="container">
-      <button id="classesBtn">Classes</button>
-      <button id="spellsBtn">Spells</button>
-      <button id="monstersBtn">Monsters</button>
-
-      <article class="results">
-        <p>Here you can see the results!</p>
-      </article>
+    <hgroup>
+      <h2>Dnd API with Express, Node-Fetch and Docker</h2>
+      <p>
+        An express server fetching data from
+        <a href="https://5e-bits.github.io/docs/api"> DnD 5e. API</a> with
+        node-fetch, deployed with Docker! 🥳🎉🪅
+      </p>
+    </hgroup>
+    <hr />
+    <br />
+    <div class="grid">
+      <div>
+        <div class="container">
+          <article>
+            <h2>Select an option to see some magic 💫🌟⭐✨👇🏻</h2>
+            <hr />
+            <div class="group" role="group">
+              <button id="classesBtn">All classes</button>
+              <button id="spellsBtn">All spells</button>
+              <button id="monstersBtn">All monsters</button>
+            </div>
+          </article>
+          <article>
+            <h4>Result console</h4>
+            <p>Here you can see the results!</p>
+            <hr />
+            <div id="results"></div>
+          </article>
+        </div>
+      </div>
+      <div>
+        <div class="container">
+          <article>
+            <h2>Select an option to see some magic 💫🌟⭐✨👇🏻</h2>
+            <!-- SEARCH FOR CLASS -->
+            <form>
+              <fieldset role="group">
+                <hgroup>
+                  <label for="class">Search a class</label>
+                  <div role="group">
+                    <input
+                      name="class"
+                      type="text"
+                      placeholder="Type a class, for example: druid!"
+                    />
+                    <input type="button" value="Search" />
+                  </div>
+                </hgroup>
+              </fieldset>
+            </form>
+          </article>
+          <article>
+            <h4>Result console</h4>
+            <p>Here you can see the results!</p>
+            <div class="results"></div>
+          </article>
+        </div>
+      </div>
     </div>
   </body>
 </html>

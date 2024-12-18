@@ -1,3 +1,19 @@
 body {
-  padding: 1.3em !important;
+  padding: 1.6em !important;
+  margin-top: 1.3em !important;
+  min-height: 100vh;
+}
+
+.group {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 5px;
+}
+
+#results {
+  padding: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
 }
