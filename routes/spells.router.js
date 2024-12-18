@@ -3,7 +3,7 @@ const express = require('express');
 const fetch = (...args) =>
   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-const URL = 'https://www.dnd5eapi.co/api/classes';
+const URL = 'https://www.dnd5eapi.co/api/spells';
 
 const router = express.Router();
 

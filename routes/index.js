@@ -1,7 +1,12 @@
 const classRouter = require('./classes.router');
+const spellsRouter = require('./spells.router');
+const monstersRouter = require('./monsters.router');
 
-function getClasses(app) {
+// APP ROUTES
+function routerApi(app) {
   app.use('/classes', classRouter);
+  app.use('/spells', spellsRouter);
+  app.use('/monsters', monstersRouter);
 }
 
-module.exports = getClasses;
+module.exports = routerApi;
