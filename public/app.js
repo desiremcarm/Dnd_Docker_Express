@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
     .getElementById('classesBtn')
     .addEventListener('click', async () => {
       try {
-        await getAllClasses('/classes');
+        await getAll('/classes');
       } catch (error) {
         console.error('Error fetching classes:', error);
       }
@@ -15,5 +15,6 @@ async function getAll(route) {
   const response = await fetch(route);
   const classes = await response.json();
   const data = classes.results;
+  console.log(data);
   return data;
 }
