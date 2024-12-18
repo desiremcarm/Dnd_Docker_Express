@@ -1,7 +1,7 @@
 const classRouter = require('./classes.router');
 
-function routerApi(app) {
+function getClasses(app) {
   app.use('/classes', classRouter);
 }
 
-module.exports = routerApi;
+module.exports = getClasses;
