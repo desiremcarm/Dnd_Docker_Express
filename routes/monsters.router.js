@@ -15,7 +15,8 @@ router.get('/', async function (req, res) {
   try {
     let response = await fetch(URL, options);
     response = await response.json();
-    res.status(200).json(response.results);
+    const limitedResults = response.results.slice(0, 10);
+    res.status(200).json(limitedResults);
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: `Internal Server Error.` });

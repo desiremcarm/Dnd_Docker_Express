@@ -41,7 +41,7 @@
           </article>
           <article>
             <h4>Result console</h4>
-            <p>Here you can see the results!</p>
+            <p>Here you can see the first 10 results!</p>
             <hr />
             <div id="results"></div>
           </article>
@@ -52,26 +52,23 @@
           <article>
             <h2>Select an option to see some magic 💫🌟⭐✨👇🏻</h2>
             <!-- SEARCH FOR CLASS -->
-            <form>
-              <fieldset role="group">
-                <hgroup>
-                  <label for="class">Search a class</label>
-                  <div role="group">
-                    <input
-                      name="class"
-                      type="text"
-                      placeholder="Type a class, for example: druid!"
-                    />
-                    <input type="button" value="Search" />
-                  </div>
-                </hgroup>
-              </fieldset>
-            </form>
+            <hgroup>
+              <div role="group">
+                <input
+                  id="className"
+                  name="class"
+                  type="text"
+                  placeholder="Type a class, for example: druid"
+                />
+                <button id="getClassByIndex">Search</button>
+              </div>
+            </hgroup>
           </article>
           <article>
             <h4>Result console</h4>
             <p>Here you can see the results!</p>
-            <div class="results"></div>
+            <hr />
+            <div id="singleResults"></div>
           </article>
         </div>
       </div>

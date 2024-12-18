@@ -25,7 +25,27 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error('Error fetching monsters:', error);
     }
   });
+
+  document
+    .getElementById('getClassByIndex')
+    .addEventListener('click', async () => {
+      const className = document.getElementById('className').value;
+      document.getElementById('className').value = '';
+      try {
+        const data = await getOne(className);
+      } catch (error) {
+        console.error('Error fetching monsters:', error);
+      }
+    });
 });
+
+// GET ONE
+async function getOne(className) {
+  const response = await fetch(`/classes/${className}`);
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
 
 // GET ALL
 async function getAll(route) {
@@ -47,9 +67,30 @@ function paint(data) {
   }
 
   data.forEach((element) => {
-    const itemEl = document.createElement('p');
-    itemEl.innerHTML = `${element.name}`;
+    const API_PREFIX = 'https://www.dnd5eapi.co';
 
-    resultContainer.appendChild(itemEl);
+    const container = document.createElement('div');
+
+    container.classList.add('result');
+
+    const hg = document.createElement('hgroup');
+
+    const name = document.createElement('p');
+    const url = document.createElement('a');
+
+    name.classList.add('pico-color-pink-500');
+
+    name.innerHTML = `📍 ${element.name}`;
+
+    hg.appendChild(name);
+
+    url.href = `${API_PREFIX}${element.url}`;
+    url.innerHTML = `🪄 ${element.url}`;
+
+    hg.appendChild(url);
+
+    container.appendChild(hg);
+
+    resultContainer.appendChild(container);
   });
 }
