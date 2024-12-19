@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('classesBtn').addEventListener('click', async () => {
     try {
-      const data = await getAll('/classes');
+      const data = await getAll(API_CLASSES);
       if (data) paint(data);
     } catch (error) {
       console.error('Error fetching classes:', error);
@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('spellsBtn').addEventListener('click', async () => {
     try {
-      const data = await getAll('/spells');
+      const data = await getAll(API_SPELLS);
       if (data) paint(data);
     } catch (error) {
       console.error('Error fetching spells:', error);
@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('monstersBtn').addEventListener('click', async () => {
     try {
-      const data = await getAll('/monsters');
+      const data = await getAll(API_MONSTER);
       if (data) paint(data);
     } catch (error) {
       console.error('Error fetching monsters:', error);
@@ -29,53 +29,58 @@ window.addEventListener('DOMContentLoaded', () => {
   document
     .getElementById('getClassByIndex')
     .addEventListener('click', async () => {
-      const className = document.getElementById('className').value.trim();
-      document.getElementById('className').value = '';
+      const className = getInputValue('className');
+
+      clearInput('className');
 
       try {
-        const data = await getSingleValue('/classes', className);
-        paintSingleClass(data);
+        const data = await getSingleValue(API_CLASSES, className);
+        paintClass(data);
       } catch (error) {
-        paintSingleClass(null, error.message);
+        paintClass(null, error.message);
       }
     });
 
   document
     .getElementById('getSpellByIndex')
     .addEventListener('click', async () => {
-      let spellName = document.getElementById('spellName').value;
-      spellName = spellName.toLowerCase().trim().split(' ').join('-');
+      const spellName = getInputValue('spellName');
 
-      console.log(spellName);
-      document.getElementById('spellName').value = '';
+      clearInput('spellName');
 
       try {
-        const data = await getSingleValue('/spells', spellName);
-        paintSingleSpell(data);
+        const data = await getSingleValue(API_SPELLS, spellName);
+        paintSpell(data);
       } catch (error) {
-        paintSingleSpell(null, error.message);
+        paintSpell(null, error.message);
       }
     });
 
   document
     .getElementById('getMonsterByIndex')
     .addEventListener('click', async () => {
-      let monsterName = document.getElementById('monsterName').value;
-      monsterName = monsterName.toLowerCase().trim().split(' ').join('-');
+      const monsterName = getInputValue('monsterName');
 
-      document.getElementById('monsterName').value = '';
+      clearInput('getMonsterByIndex');
 
       try {
-        const data = await getSingleValue('/monsters', monsterName);
+        const data = await getSingleValue(API_MONSTER, monsterName);
         console.log(data);
-        paintSingleMonster(data);
+        paintMonster(data);
       } catch (error) {
-        paintSingleMonster(null, error.message);
+        paintMonster(null, error.message);
       }
     });
 });
 
+// ************** VARIABLES
+
 const API_PREFIX = 'https://www.dnd5eapi.co';
+const API_MONSTER = '/monsters';
+const API_SPELLS = '/spells';
+const API_CLASSES = '/classes';
+
+// ************** FETCH DATA
 
 // GET SINGLE
 async function getSingleValue(route, name) {
@@ -98,6 +103,8 @@ async function getAll(route) {
   const data = await response.json();
   return data;
 }
+
+// ************** PAINT RESULTS
 
 // PAINT RESULTS
 function paint(data) {
@@ -139,89 +146,82 @@ function paint(data) {
   });
 }
 
-// PAINT SINGLE CLASS
-function paintSingleClass(data, error = null) {
+// PAINT CLASS
+function paintClass(data, error = null) {
   const resultContainer = document.getElementById('singleResults');
-  resultContainer.innerHTML = ''; // Limpiar resultados previos
 
-  if (error) {
-    resultContainer.innerHTML = `<p class="error">❌ ${error}</p>`;
-    return;
-  }
+  validateSearch(data, error, resultContainer);
 
-  if (!data || Object.keys(data).length === 0) {
-    resultContainer.innerHTML = `<p>No results found... 😢</p>`;
-    return;
-  }
+  const template = createTemplateForClass(data);
 
-  const proficienciesHTML = createList(data.proficiencies, 'singleResult');
-  const startingEquipmentHTML = createList(
-    data.starting_equipment_options,
-    'singleResult',
-  );
-
-  const classHTML = `
-    <article>
-      <h4>${data.name}</h4>
-      <h6>Proficiencies</h6>
-      <ul>${proficienciesHTML}</ul>
-      <h6>Starting Equipment Options</h6>
-      <ul>${startingEquipmentHTML}</ul>
-      <a href="${API_PREFIX}${data.url}" target="_blank">URL: ${data.url}</a>
-    </article>
-  `;
-
-  resultContainer.innerHTML = classHTML;
+  resultContainer.innerHTML = template;
 }
 
-// PAINT SINGLE SPELL
-function paintSingleSpell(data, error = null) {
+// PAINT SPELL
+function paintSpell(data, error = null) {
   const resultContainer = document.getElementById('singleResults');
-  resultContainer.innerHTML = ''; // Limpiar resultados previos
 
-  if (error) {
-    resultContainer.innerHTML = `<p class="error">❌ ${error}</p>`;
-    return;
-  }
+  validateSearch(data, error, resultContainer);
 
-  if (!data || Object.keys(data).length === 0) {
-    resultContainer.innerHTML = `<p>No results found... 😢</p>`;
-    return;
-  }
+  const template = createTemplateForSpell(data);
 
-  const classes = createList(data.classes, 'singleResult');
-
-  const classHTML = `
-  <article>
-    <h4>${data.name}</h4>
-    <p>${data.desc}</p>
-    <p><b>School:</b> ${data.school.name}</p>
-    <p><b>Level:</b> ${data.level}</p>
-    <p><b>Duration:</b> ${data.duration}</p>
-    <h6>Classes</h6>
-    <ul>${classes}</ul>
-    <a href="${API_PREFIX}${data.url}">${data.url}</a>
-  </article>
-`;
-
-  resultContainer.innerHTML = classHTML;
+  resultContainer.innerHTML = template;
 }
 
-// PAINT SINGLE MONSTER
-function paintSingleMonster(data, error = null) {
+// PAINT MONSTER
+function paintMonster(data, error = null) {
   const resultContainer = document.getElementById('singleResults');
-  resultContainer.innerHTML = ''; // Limpiar resultados previos
 
+  validateSearch(data, error, resultContainer);
+
+  const template = createTemplateForMonster(data);
+
+  resultContainer.innerHTML = template;
+}
+
+// ************** AUX
+
+// AUXILIAR
+function createList(items, name) {
+  return items
+    .map(
+      (item) =>
+        `<li class="${name}"><p class="pico-color-pink-500">${item.name || item.desc}</p></li>`,
+    )
+    .join('');
+}
+
+function clearInput(id_name) {
+  document.getElementById(id_name).value = '';
+}
+
+function getInputValue(name) {
+  let valueName = document.getElementById(name).value;
+
+  valueName = valueName.toLowerCase().trim().split(' ').join('-');
+
+  return valueName;
+}
+
+// ************* VALIDATE
+
+// VALIDATE INPUT
+function validateSearch(data, error, container) {
   if (error) {
-    resultContainer.innerHTML = `<p class="error">❌ ${error}</p>`;
+    container.innerHTML = `<p class="error">❌ ${error}</p>`;
     return;
   }
 
   if (!data || Object.keys(data).length === 0) {
-    resultContainer.innerHTML = `<p>No results found... 😢</p>`;
+    container.innerHTML = `<p>No results found... 😢</p>`;
     return;
   }
+}
 
+// ************* TEMPLATES
+
+// CREATION OF TEMPLATE FOR MONSTER
+function createTemplateForMonster(data) {
   const special_ab = createList(data.special_abilities, 'singleResult');
   const actions = createList(data.actions, 'singleResult');
   const legen_actions = createList(data.legendary_actions, 'singleResult');
@@ -243,15 +243,47 @@ function paintSingleMonster(data, error = null) {
   </article>
 `;
 
-  resultContainer.innerHTML = classHTML;
+  return classHTML;
 }
 
-// AUXILIAR
-function createList(items, name) {
-  return items
-    .map(
-      (item) =>
-        `<li class="${name}"><p class="pico-color-pink-500">${item.name || item.desc}</p></li>`,
-    )
-    .join('');
+// CREATION OF TEMPLATE FOR SPELL
+function createTemplateForSpell(data) {
+  const classes = createList(data.classes, 'singleResult');
+
+  const classHTML = `
+  <article>
+    <h4>${data.name}</h4>
+    <p>${data.desc}</p>
+    <p><b>School:</b> ${data.school.name}</p>
+    <p><b>Level:</b> ${data.level}</p>
+    <p><b>Duration:</b> ${data.duration}</p>
+    <h6>Classes</h6>
+    <ul>${classes}</ul>
+    <a href="${API_PREFIX}${data.url}">${data.url}</a>
+  </article>
+`;
+
+  return classHTML;
+}
+
+// CREATION OF TEMPLATE FOR CLASS
+function createTemplateForClass(data) {
+  const proficienciesHTML = createList(data.proficiencies, 'singleResult');
+  const startingEquipmentHTML = createList(
+    data.starting_equipment_options,
+    'singleResult',
+  );
+
+  const classHTML = `
+    <article>
+      <h4>${data.name}</h4>
+      <h6>Proficiencies</h6>
+      <ul>${proficienciesHTML}</ul>
+      <h6>Starting Equipment Options</h6>
+      <ul>${startingEquipmentHTML}</ul>
+      <a href="${API_PREFIX}${data.url}" target="_blank">URL: ${data.url}</a>
+    </article>
+  `;
+
+  return classHTML;
 }
