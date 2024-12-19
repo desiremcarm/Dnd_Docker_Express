@@ -49,6 +49,11 @@ hgroup p {
   font-weight: bold;
 }
 
+article a {
+  text-decoration: none;
+  color: var(--pico-color-blue-600);
+}
+
 ul,
 li {
   list-style: none !important;

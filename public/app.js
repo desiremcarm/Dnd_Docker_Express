@@ -29,30 +29,103 @@ window.addEventListener('DOMContentLoaded', () => {
   document
     .getElementById('getClassByIndex')
     .addEventListener('click', async () => {
-      const className = document.getElementById('className').value;
+      const className = document.getElementById('className').value.trim();
       document.getElementById('className').value = '';
+
       try {
-        const data = await getOne(className);
+        const data = await getClass(className);
         paintSingleClass(data);
       } catch (error) {
-        console.error('Error fetching monsters:', error);
+        paintSingleClass(null, error.message);
+      }
+    });
+
+  document
+    .getElementById('getSpellByIndex')
+    .addEventListener('click', async () => {
+      let spellName = document.getElementById('spellName').value;
+      spellName = spellName.toLowerCase().trim().split(' ').join('-');
+
+      console.log(spellName);
+      document.getElementById('spellName').value = '';
+
+      try {
+        const data = await getSpell(spellName);
+        paintSingleSpell(data);
+      } catch (error) {
+        paintSingleSpell(null, error.message);
+      }
+    });
+
+  document
+    .getElementById('getMonsterByIndex')
+    .addEventListener('click', async () => {
+      let monsterName = document.getElementById('monsterName').value;
+      monsterName = monsterName.toLowerCase().trim().split(' ').join('-');
+
+      document.getElementById('monsterName').value = '';
+
+      try {
+        const data = await getMonster(monsterName);
+        console.log(data);
+        paintSingleMonster(data);
+      } catch (error) {
+        paintSingleMonster(null, error.message);
       }
     });
 });
 
-// GET ONE
-async function getOne(className) {
-  const response = await fetch(`/classes/${className}`);
-  const data = await response.json();
-  console.log(data);
-  return data;
+const API_PREFIX = 'https://www.dnd5eapi.co';
+
+// GET SINGLE CLASS
+async function getClass(className) {
+  try {
+    const response = await fetch(`/classes/${className}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.msg || `Class "${className}" not found.`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in getClass:', error);
+    throw error;
+  }
+}
+
+// GET SINGLE SPELL
+async function getSpell(spellName) {
+  try {
+    const response = await fetch(`/spells/${spellName}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.msg || `Spell "${spellName}" not found.`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in getSpell:', error);
+    throw error;
+  }
+}
+
+// GET SINGLE MONSTER
+async function getMonster(monsterName) {
+  try {
+    const response = await fetch(`/monsters/${monsterName}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.msg || `Monster "${monsterName}" not found.`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error in getMonster:', error);
+    throw error;
+  }
 }
 
 // GET ALL
 async function getAll(route) {
   const response = await fetch(route);
   const data = await response.json();
-  console.log(data);
   return data;
 }
 
@@ -97,73 +170,118 @@ function paint(data) {
 }
 
 // PAINT SINGLE CLASS
-function paintSingleClass(data) {
-  // TODO ❓ CHANGING THIS FOR A TEMPLATE?
-
+function paintSingleClass(data, error = null) {
   const resultContainer = document.getElementById('singleResults');
-  // Cleaning previous results
-  resultContainer.innerHTML = '';
+  resultContainer.innerHTML = ''; // Limpiar resultados previos
 
-  // If there is no data
-  if (!data || data.length === 0) {
-    resultContainer.innerHTML = `<p>There were no results... 😢</p>`;
+  if (error) {
+    resultContainer.innerHTML = `<p class="error">❌ ${error}</p>`;
+    return;
   }
 
-  const API_PREFIX = 'https://www.dnd5eapi.co';
+  if (!data || Object.keys(data).length === 0) {
+    resultContainer.innerHTML = `<p>No results found... 😢</p>`;
+    return;
+  }
 
-  const container = document.createElement('article');
+  const proficienciesHTML = createList(data.proficiencies, 'singleResult');
+  const startingEquipmentHTML = createList(
+    data.starting_equipment_options,
+    'singleResult',
+  );
 
-  const name = document.createElement('h4');
-  name.innerHTML = `${data.name}`;
+  const classHTML = `
+    <article>
+      <h4>${data.name}</h4>
+      <h6>Proficiencies</h6>
+      <ul>${proficienciesHTML}</ul>
+      <h6>Starting Equipment Options</h6>
+      <ul>${startingEquipmentHTML}</ul>
+      <a href="${API_PREFIX}${data.url}" target="_blank">URL: ${data.url}</a>
+    </article>
+  `;
 
-  container.appendChild(name);
+  resultContainer.innerHTML = classHTML;
+}
 
-  // PROFICIENCIES
-  const spellcast_title = document.createElement('h6');
-  spellcast_title.innerHTML = 'Proficiencies';
+// PAINT SINGLE SPELL
+function paintSingleSpell(data, error = null) {
+  const resultContainer = document.getElementById('singleResults');
+  resultContainer.innerHTML = ''; // Limpiar resultados previos
 
-  container.appendChild(spellcast_title);
+  if (error) {
+    resultContainer.innerHTML = `<p class="error">❌ ${error}</p>`;
+    return;
+  }
 
-  const prof_ul = document.createElement('ul');
+  if (!data || Object.keys(data).length === 0) {
+    resultContainer.innerHTML = `<p>No results found... 😢</p>`;
+    return;
+  }
 
-  data.proficiencies.forEach((element) => {
-    const prof_li = document.createElement('li');
-    prof_li.classList.add('singleResult');
+  const classes = createList(data.classes, 'singleResult');
 
-    const prof_name = document.createElement('p');
-    prof_name.innerHTML = `${element.name}`;
-    prof_name.classList.add('pico-color-pink-500');
+  const classHTML = `
+  <article>
+    <h4>${data.name}</h4>
+    <p>${data.desc}</p>
+    <p><b>School:</b> ${data.school.name}</p>
+    <p><b>Level:</b> ${data.level}</p>
+    <p><b>Duration:</b> ${data.duration}</p>
+    <h6>Classes</h6>
+    <ul>${classes}</ul>
+    <a href="${API_PREFIX}${data.url}">${data.url}</a>
+  </article>
+`;
 
-    prof_li.appendChild(prof_name);
+  resultContainer.innerHTML = classHTML;
+}
 
-    prof_ul.appendChild(prof_li);
-  });
+// PAINT SINGLE MONSTER
+function paintSingleMonster(data, error = null) {
+  const resultContainer = document.getElementById('singleResults');
+  resultContainer.innerHTML = ''; // Limpiar resultados previos
 
-  container.appendChild(prof_ul);
+  if (error) {
+    resultContainer.innerHTML = `<p class="error">❌ ${error}</p>`;
+    return;
+  }
 
-  // STARTING EQ
-  const star_eq_title = document.createElement('h6');
-  star_eq_title.innerHTML = 'Starting equipment options';
+  if (!data || Object.keys(data).length === 0) {
+    resultContainer.innerHTML = `<p>No results found... 😢</p>`;
+    return;
+  }
 
-  container.appendChild(star_eq_title);
+  const special_ab = createList(data.special_abilities, 'singleResult');
+  const actions = createList(data.actions, 'singleResult');
+  const legen_actions = createList(data.legendary_actions, 'singleResult');
 
-  const st_eq_ul = document.createElement('ul');
+  const classHTML = `
+  <article>
+    <h4>${data.name}</h4>
+    <p><b>Size:</b> ${data.size}</p>
+    <p><b>Type:</b> ${data.type}</p>
+    <p><b>HP:</b> ${data.hit_points}</p>
+    <p><b>Alignment:</b> ${data.alignment}</p>
+    <h6>Special habilities</h6>
+    <ul>${special_ab}</ul>
+    <h6>Actions</h6>
+    <ul>${actions}</ul>
+    <h6>Legendary actions</h6>
+    <ul>${legen_actions}</ul>
+    <a href="${API_PREFIX}${data.url}">${data.url}</a>
+  </article>
+`;
 
-  data.starting_equipment_options.forEach((element) => {
-    const st_eq_li = document.createElement('li');
-    st_eq_li.classList.add('singleResult');
+  resultContainer.innerHTML = classHTML;
+}
 
-    const st_eq_name = document.createElement('p');
-    st_eq_name.innerHTML = `${element.desc}`;
-    st_eq_name.classList.add('pico-color-pink-500');
-
-    st_eq_li.appendChild(st_eq_name);
-
-    st_eq_ul.appendChild(st_eq_li);
-  });
-
-  container.appendChild(st_eq_ul);
-
-  // ADDING EVERYTHING ELSE
-  resultContainer.appendChild(container);
+// AUXILIAR
+function createList(items, name) {
+  return items
+    .map(
+      (item) =>
+        `<li class="${name}"><p class="pico-color-pink-500">${item.name || item.desc}</p></li>`,
+    )
+    .join('');
 }

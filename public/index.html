@@ -41,7 +41,7 @@
           </article>
           <article>
             <h4>Result console</h4>
-            <p>Here you can see the first 10 results!</p>
+            <p>Will show 15 random results everytime.</p>
             <hr />
             <div id="results"></div>
           </article>
@@ -52,17 +52,33 @@
           <article>
             <h2>Select an option to see some magic 💫🌟⭐✨👇🏻</h2>
             <!-- SEARCH FOR CLASS -->
-            <hgroup>
-              <div role="group">
-                <input
-                  id="className"
-                  name="class"
-                  type="text"
-                  placeholder="Type a class, for example: druid"
-                />
-                <button id="getClassByIndex">Search</button>
-              </div>
-            </hgroup>
+            <div role="group">
+              <input
+                id="className"
+                name="class"
+                type="text"
+                placeholder="Type a class, for example: druid"
+              />
+              <button id="getClassByIndex">Search</button>
+            </div>
+            <div role="group">
+              <input
+                id="spellName"
+                name="spell"
+                type="text"
+                placeholder="Type a spell, for example: acid arrow"
+              />
+              <button id="getSpellByIndex">Search</button>
+            </div>
+            <div role="group">
+              <input
+                id="monsterName"
+                name="monster"
+                type="text"
+                placeholder="Type a monster, for example: adult black dragon"
+              />
+              <button id="getMonsterByIndex">Search</button>
+            </div>
           </article>
           <article>
             <h4>Result console</h4>
