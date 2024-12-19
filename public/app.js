@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('className').value = '';
 
       try {
-        const data = await getClass(className);
+        const data = await getSingleValue('/classes', className);
         paintSingleClass(data);
       } catch (error) {
         paintSingleClass(null, error.message);
@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('spellName').value = '';
 
       try {
-        const data = await getSpell(spellName);
+        const data = await getSingleValue('/spells', spellName);
         paintSingleSpell(data);
       } catch (error) {
         paintSingleSpell(null, error.message);
@@ -66,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('monsterName').value = '';
 
       try {
-        const data = await getMonster(monsterName);
+        const data = await getSingleValue('/monsters', monsterName);
         console.log(data);
         paintSingleMonster(data);
       } catch (error) {
@@ -77,47 +77,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
 const API_PREFIX = 'https://www.dnd5eapi.co';
 
-// GET SINGLE CLASS
-async function getClass(className) {
+// GET SINGLE
+async function getSingleValue(route, name) {
   try {
-    const response = await fetch(`/classes/${className}`);
+    const response = await fetch(`${route}/${name}`);
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.msg || `Class "${className}" not found.`);
+      throw new Error(errorData.msg || `Value: "${name}" not found.`);
     }
     return await response.json();
   } catch (error) {
-    console.error('Error in getClass:', error);
-    throw error;
-  }
-}
-
-// GET SINGLE SPELL
-async function getSpell(spellName) {
-  try {
-    const response = await fetch(`/spells/${spellName}`);
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.msg || `Spell "${spellName}" not found.`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error in getSpell:', error);
-    throw error;
-  }
-}
-
-// GET SINGLE MONSTER
-async function getMonster(monsterName) {
-  try {
-    const response = await fetch(`/monsters/${monsterName}`);
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.msg || `Monster "${monsterName}" not found.`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error in getMonster:', error);
+    console.error('Error:', error);
     throw error;
   }
 }
