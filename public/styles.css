@@ -35,3 +35,21 @@ body {
 hgroup p {
   margin-top: 15px;
 }
+
+.singleResult {
+  background-color: var(--pico-color-pink-50);
+  border-radius: 5px;
+  padding: 2px;
+  padding-left: 8px;
+  margin: 5px;
+}
+
+.singleResult p {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+ul,
+li {
+  list-style: none !important;
+}

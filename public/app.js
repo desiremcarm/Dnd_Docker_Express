@@ -33,6 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('className').value = '';
       try {
         const data = await getOne(className);
+        paintSingleClass(data);
       } catch (error) {
         console.error('Error fetching monsters:', error);
       }
@@ -93,4 +94,76 @@ function paint(data) {
 
     resultContainer.appendChild(container);
   });
+}
+
+// PAINT SINGLE CLASS
+function paintSingleClass(data) {
+  // TODO ❓ CHANGING THIS FOR A TEMPLATE?
+
+  const resultContainer = document.getElementById('singleResults');
+  // Cleaning previous results
+  resultContainer.innerHTML = '';
+
+  // If there is no data
+  if (!data || data.length === 0) {
+    resultContainer.innerHTML = `<p>There were no results... 😢</p>`;
+  }
+
+  const API_PREFIX = 'https://www.dnd5eapi.co';
+
+  const container = document.createElement('article');
+
+  const name = document.createElement('h4');
+  name.innerHTML = `${data.name}`;
+
+  container.appendChild(name);
+
+  // PROFICIENCIES
+  const spellcast_title = document.createElement('h6');
+  spellcast_title.innerHTML = 'Proficiencies';
+
+  container.appendChild(spellcast_title);
+
+  const prof_ul = document.createElement('ul');
+
+  data.proficiencies.forEach((element) => {
+    const prof_li = document.createElement('li');
+    prof_li.classList.add('singleResult');
+
+    const prof_name = document.createElement('p');
+    prof_name.innerHTML = `${element.name}`;
+    prof_name.classList.add('pico-color-pink-500');
+
+    prof_li.appendChild(prof_name);
+
+    prof_ul.appendChild(prof_li);
+  });
+
+  container.appendChild(prof_ul);
+
+  // STARTING EQ
+  const star_eq_title = document.createElement('h6');
+  star_eq_title.innerHTML = 'Starting equipment options';
+
+  container.appendChild(star_eq_title);
+
+  const st_eq_ul = document.createElement('ul');
+
+  data.starting_equipment_options.forEach((element) => {
+    const st_eq_li = document.createElement('li');
+    st_eq_li.classList.add('singleResult');
+
+    const st_eq_name = document.createElement('p');
+    st_eq_name.innerHTML = `${element.desc}`;
+    st_eq_name.classList.add('pico-color-pink-500');
+
+    st_eq_li.appendChild(st_eq_name);
+
+    st_eq_ul.appendChild(st_eq_li);
+  });
+
+  container.appendChild(st_eq_ul);
+
+  // ADDING EVERYTHING ELSE
+  resultContainer.appendChild(container);
 }
