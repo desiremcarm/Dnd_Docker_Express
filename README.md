@@ -4,6 +4,8 @@
 
 This web app uses **Express** for the backend, **node-fetch** to make HTTP requests to the [Dungeons & Dragons 5th edition API](https://5e-bits.github.io/docs/api) and a simple frontend built with **HTML, CSS and JavaScript**.
 
+✅ Check the site live [here](https://dnd-api-express.onrender.com) 🥳🎉
+
 The app allows the user to interact with the DnD API and retrieve information about all classes, spells and monsters, as well as specific information about a single class, spell or monster.
 
   #### Functionalities
