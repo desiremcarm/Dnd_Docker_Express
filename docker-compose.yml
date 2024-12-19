@@ -1,11 +1,8 @@
 services:
-  dnd_api:
-    image: bitnami/express:latest
-    hostname: dnd_api
+  app:
+    build: .
     container_name: dnd_api
-    environment:
-      - PORT=3001
     ports:
       - "3001:3001"
-    volumes:
-      - ".:/app"
+    environment:
+      - NODE_ENV=development
