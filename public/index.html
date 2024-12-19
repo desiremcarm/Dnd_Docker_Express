@@ -14,11 +14,11 @@
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
     />
     <script src="app.js"></script>
-    <title>API</title>
+    <title>Dungeons and Dragons API Project</title>
   </head>
   <body>
     <hgroup>
-      <h2>Dnd API with Express, Node-Fetch and Docker</h2>
+      <h2>Dungeons&Dragons API with Express, Node-Fetch and Docker</h2>
       <p>
         An express server fetching data from
         <a href="https://5e-bits.github.io/docs/api"> DnD 5e. API</a> with
@@ -31,12 +31,32 @@
       <div>
         <div class="container">
           <article>
-            <h2>Select an option to see some magic 💫🌟⭐✨👇🏻</h2>
+            <h2 class="pico-color-pink-450">
+              Select an option to see some magic 💫🌟⭐✨👇🏻
+            </h2>
             <hr />
             <div class="group" role="group">
-              <button id="classesBtn">All classes</button>
-              <button id="spellsBtn">All spells</button>
-              <button id="monstersBtn">All monsters</button>
+              <button
+                data-tooltip="Search for all classes"
+                class="pico-background-pink-550"
+                id="classesBtn"
+              >
+                All classes
+              </button>
+              <button
+                data-tooltip="Search for all spells"
+                class="pico-background-pink-550"
+                id="spellsBtn"
+              >
+                All spells
+              </button>
+              <button
+                data-tooltip="Search for all monsters"
+                class="pico-background-pink-550"
+                id="monstersBtn"
+              >
+                All monsters
+              </button>
             </div>
           </article>
           <article>
@@ -50,34 +70,45 @@
       <div>
         <div class="container">
           <article>
-            <h2>Select an option to see some magic 💫🌟⭐✨👇🏻</h2>
+            <h2 class="pico-color-pink-450">
+              Select an option to see some magic 💫🌟⭐✨👇🏻
+            </h2>
             <!-- SEARCH FOR CLASS -->
+            <p>🧙🏻‍♂️ Search an specific class:</p>
             <div role="group">
               <input
                 id="className"
                 name="class"
                 type="text"
-                placeholder="Type a class, for example: druid"
+                placeholder="Example: druid"
               />
-              <button id="getClassByIndex">Search</button>
+              <button class="pico-background-pink-550" id="getClassByIndex">
+                Search
+              </button>
             </div>
+            <p>🪄 Search an specific spell:</p>
             <div role="group">
               <input
                 id="spellName"
                 name="spell"
                 type="text"
-                placeholder="Type a spell, for example: acid arrow"
+                placeholder="Example: acid arrow"
               />
-              <button id="getSpellByIndex">Search</button>
+              <button class="pico-background-pink-550" id="getSpellByIndex">
+                Search
+              </button>
             </div>
+            <p>🐲 Search an specific monster:</p>
             <div role="group">
               <input
                 id="monsterName"
                 name="monster"
                 type="text"
-                placeholder="Type a monster, for example: adult black dragon"
+                placeholder="Example: kobold"
               />
-              <button id="getMonsterByIndex">Search</button>
+              <button class="pico-background-pink-550" id="getMonsterByIndex">
+                Search
+              </button>
             </div>
           </article>
           <article>
