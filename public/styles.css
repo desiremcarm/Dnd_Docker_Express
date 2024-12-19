@@ -1,7 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 body {
   padding: 1.6em !important;
   margin-top: 1.3em !important;
   min-height: 100vh;
+}
+
+footer {
+  margin-top: 100px;
+}
+
+footer p {
+  text-align: center;
+  font-family: "Poppins", serif;
+  color: var(--pico-color-pink-500) !important;
 }
 
 .group {
@@ -9,7 +21,9 @@ body {
   flex-wrap: wrap !important;
   gap: 5px;
 }
+
 .result {
+  font-family: "Poppins", serif;
   background-color: var(--pico-color-pink-50);
   border-radius: 5px;
   padding: 2px;
@@ -37,10 +51,10 @@ hgroup p {
 }
 
 .singleResult {
+  font-family: "Poppins", serif;
   background-color: var(--pico-color-pink-50);
   border-radius: 5px;
   padding: 2px;
-  padding-left: 8px;
   margin: 5px;
 }
 
@@ -54,7 +68,17 @@ article a {
   color: var(--pico-color-blue-600);
 }
 
+ul li {
+  width: 100%;
+}
+
 ul,
 li {
   list-style: none !important;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    padding: 0.5em !important;
+  }
 }
